@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Bootstrap CSS-->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS-->
+    <link href="custom.css" rel="stylesheet" />
+
+    <title>Mason API Browser</title>
+
+</head>
+<body>
+    <div class="container">
+        <div class="col-md-4 center-block" style="float:none">
+            <h1 class="page-header">
+                Mason API Browser
+            </h1>
+        </div>
+        <form method="POST" action="" accept-charset="UTF-8" class="form-horizontal" role="form">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="Enter URL" type="text" id="url">
+                        <span class="input-group-btn">
+                            <input class="btn btn-primary" style="margin-left: 15px" type="button" value="GET" id="get_api">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-8">
+                    <input class="form-control" placeholder="Enter Header" type="text" id="req_header">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                        <div class="span5" id="pretty_format"></div>
+                </div>
+
+                <div class="col-md-1">
+                    <span></span>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <textarea class="form-control" rows="25" id="raw_format"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- JQuery Script-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Bootstrap JavaScript-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap JavaScript-->
+    <script src="ajax_call.js"></script>
+</body>
+</html>

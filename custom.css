@@ -1,0 +1,6 @@
+.span5
+{
+    border:solid 1px black;
+    height:500px;
+    overflow-y: auto;
+}
