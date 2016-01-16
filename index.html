@@ -23,9 +23,22 @@
             <div class="form-group">
                 <div class="col-md-10">
                     <div class="input-group">
-                        <input class="form-control" placeholder="Enter URL" type="text" id="url">
+                        <!-- Dropdown button -->
+                        <div class="input-group-btn">
+                            <button type="button" id='method' class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                GET <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">GET</a></li>
+                                <li><a href="#">POST</a></li>
+                                <li><a href="#">PUT</a></li>
+                                <li><a href="#">DELETE</a></li>
+                                <li><a href="#">PATCH</a></li>
+                            </ul>
+                        </div>
+                        <input class="form-control" placeholder="Enter URL" type="text" id="url" style="margin-left: 5px">
                         <span class="input-group-btn">
-                            <input class="btn btn-primary" style="margin-left: 15px" type="button" value="GET" id="get_api">
+                            <input class="btn btn-primary" style="margin-left: 15px" type="button" value="Send" id="get_api">
                         </span>
                     </div>
                 </div>

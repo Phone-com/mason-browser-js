@@ -8,7 +8,7 @@ $('#get_api').on('click', function()
 {
     var api_url = $('#url').val();
     var req_header = $('#req_header').val();
-    var httpmethod = 'GET';
+    var httpmethod = $.trim($('#method').text());
 
     $.ajax
     ({
@@ -22,33 +22,22 @@ $('#get_api').on('click', function()
         {
             // console.log(response);
 
+            // You may want to have a condition to check for an error here...
+
             var html = "";
 
             // @meta > @title
-            html += "<p><strong>" + response['@meta']['@title'] + "</strong></p>";
+            if (response['@meta']['@title']) {html += "<p><strong>" + response['@meta']['@title'] + "</strong></p>";}
 
             // @controls
             html += "<p><em><strong>Controls</strong></em></p>";
             html += recurse(response["@controls"]);
 
-
-
-
-
-            // var mason_element = "";
-            // var items = recurse(response);
-            // html += items + "</ul>";
             $('#pretty_format').html(html);
 
             $('#raw_format').val(JSON.stringify(response,null,2));
             // console.log (response, textStatus, jqXHR);
 
-            /*
-             $.each(response, function(index, element)
-             {
-                $('#raw_format').val(element.name);
-             });
-             */
         },
         error: function(jqXHR, textStatus, errorThrown)
         {
@@ -64,10 +53,10 @@ $('#get_api').on('click', function()
         for (var key in element)
         {
             if (element[key]["href"]) {
-                item += "<p>&nbsp;&nbsp;<a href='" + element[key]["href"] + "'>" + key + "</a> (Link)";
+                item += "<p>&nbsp;&nbsp;&nbsp;<a href='" + element[key]["href"] + "'>" + key + "</a> (Link)";
             }
             if (key == "title") {
-                item += "<br>&nbsp;&nbsp;" + element[key] + "</p>";
+                item += "<br>&nbsp;&nbsp;&nbsp;" + element[key] + "</p>";
             }
             else {
                 if (typeof element[key] == "object") {
@@ -78,4 +67,11 @@ $('#get_api').on('click', function()
 
         return item;
     }
+});
+
+// Http Method select dropdown script
+$(".dropdown-menu").on('click', 'li a', function()
+{
+    $("#method").html($(this).text() + ' <span class="caret"></span>');
+    $("#method").val($(this).data('value'));
 });
