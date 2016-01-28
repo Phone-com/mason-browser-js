@@ -8,13 +8,6 @@
 
         <!-- Custom CSS-->
         <style media="screen" type="text/css">
-            .span_me
-            {
-                border:solid 1px black;
-                height:500px;
-                overflow-y: auto;
-            }
-
             .glyphicon-refresh-animate {
                 -animation: spin .7s infinite linear;
                 -webkit-animation: spin2 .7s infinite linear;
@@ -36,21 +29,19 @@
     </head>
     <body>
         <div class="container">
-            <div class="col-md-4 center-block" style="float:none">
-                <h1 class="page-header">
-                    Mason API Browser
-                </h1>
-            </div>
+
+            <h1 class="page-header text-center">
+                Mason API Browser
+            </h1>
 
             <form accept-charset="UTF-8" class="form-horizontal" role="form">
                 <div class="form-group">
-                    <div class="col-md-12">
+                    <div class="col-sm-offset-2 col-sm-8">
                         <div class="input-group">
-                            <!-- Dropdown button -->
                             <div class="input-group-btn">
-                                <button type="button" id='method' class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    GET <span class="caret"></span>
-                                </button>
+                                <button type="button" id="method" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                >GET <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">GET</a></li>
                                     <li><a href="#">POST</a></li>
@@ -59,9 +50,9 @@
                                     <li><a href="#">PATCH</a></li>
                                 </ul>
                             </div>
-                            <input class="form-control" placeholder="Enter URL" type="text" id="url" style="margin-left: 5px">
+                            <input class="form-control" placeholder="Enter URL" type="text" id="url" style="margin-left: -1px">
                             <span class="input-group-btn">
-                                <input class="btn btn-primary" style="margin-left: 15px" type="button" value="Send" id="get_api">
+                                <button class="btn btn-primary" type="button" id="get_api">Send</button>
                             </span>
                         </div>
                     </div>
@@ -96,7 +87,7 @@
                         </div>
                         <!-- Textarea field -->
                         <div class="form-group">
-                            <div class="col-md-11 text-left">
+                            <div class="col-sm-12">
                                 <div class="span_me" id="pretty_format" data-num="1"></div>
                             </div>
                         </div>
@@ -154,16 +145,14 @@
              * in a readable text format.
              */
 
-            $('#get_api').on('click', function()
-            {
+            $('#get_api').on('click', function() {
+
                 var active_tab = $('.nav-tabs .active').text();
-                if (active_tab == "Headers")
-                {
+                if (active_tab == "Headers") {
                     var selected_property_element = "#header_property_1";
                     var selected_value_element = "#header_value_1";
-                }
-                else
-                {
+
+                } else {
                     var selected_property_element = "#body_key_1";
                     var selected_value_element = "#key_value_1";
                 }
@@ -180,26 +169,18 @@
                 dialog.positionOn(target, 'center');
                 dialog.show();
 
-                $.ajax
-                ({
+                $.ajax({
                     type: httpmethod,
                     url: api_url,
-                    beforeSend: function (xhr)
-                    {
-                        if (httpmethod == "GET")
-                        {
+                    beforeSend: function (xhr) {
+                        if (httpmethod == "GET" && header_property) {
                             xhr.setRequestHeader (header_property, header_value);
-                            console.log()
                         }
                     },
-                    success: function(response, textStatus, jqXHR)
-                    {
-                        // Output the response in a stringify format in the pretty_format div
+                    success: function(response, textStatus, jqXHR) {
                         output_it(response);
-
                     },
-                    error: function(jqXHR, textStatus, errorThrown)
-                    {
+                    error: function(jqXHR, textStatus, errorThrown) {
                         $('#pretty_format').html("<pre>" + jqXHR.responseText + "</pre>");
                     }
                 });
@@ -207,91 +188,78 @@
             });
 
             // Handles the output of the response object
-            function output_it(response)
-            {
-                var counter = 0;
-                var my_method = "";
-                var my_method_clause = "";
-                var method_key = "";
+            function output_it(response) {
 
-                $('#pretty_format').html("<pre>" + JSON.stringify(response,
-                    function(key, value)
-                    {
-                        control_prop = key;
-                        if (key == "@controls")
-                        {
+                var namespaces = response['@namespaces'];
+                var namespaceMap = {};
+                if (response['@namespaces']) {
+                    $.each(response['@namespaces'], function(key, namespace) {
 
-                            for(var i = 0; i < Object.keys(value).length; ++i)
-                            {
-                                $.each(Object.keys(value), function(control_key, control_value)
-                                {
-                                    if (value[control_value].method)
-                                    {
-                                        my_method = value[control_value].method;
-                                        method_key = control_value; // e.g. self  
-                                    }
-                                });
-                            }
+                        var name = namespace.name;
 
+                        if (name.substr(0, 7) != "http://" && name.substr(0, 8) != "https://") {
+                            name = api_url.protocol + api_url.hostname + name;
                         }
 
+                        namespaceMap[key] = name;
 
-                        if (key == method_key)
-                        {
-                            if (!my_method)
-                            {
-                                my_method = "GET";
+                        namespace.name = "<a href='" + name + "' target='blank'>" + namespace.name + "</a>";
+                    });
+                }
+
+                var renderer = function(key, value) {
+
+                    if (key == "@controls") {
+                        $.each(value, function(relation, control) {
+
+                            $.each(namespaceMap, function(namespaceName, namespaceUrl) {
+                                if (relation.substr(0, namespaceName.length + 1) == namespaceName + ':') {
+                                    delete value[relation];
+                                    value["<a href='" + namespaceUrl + relation.substr(namespaceName.length + 1) + "' target='blank'>" + relation + "</a>"] = control;
+                                }
+                            });
+
+                            var href = control.href;
+                            var method = (control.method ? control.method : 'GET');
+
+                            if (href.substr(0, 7) != "http://" && href.substr(0, 8) != "https://") {
+                                href = api_url.protocol + api_url.hostname + href;
                             }
-                            my_method_clause = "data-target-method='" + my_method + "'";
-                        }
 
-                        if (key == "href" || key == "schemaUrl") {
+                            control.href = "<a href='" + href + "' class='clickable_url' "
+                                + "data-target-method='" + method + "'>" + control.href + "</a>";
 
-                            if (value.indexOf("http://") >= 0 || value.indexOf("https://") >= 0) {
-                                counter++;
-                                value = "<a href='" + value + "' class='clickable_url' id='url_" + counter + "' " + my_method_clause + ">" + value + "</a>";
+                            if (control.schemaUrl) {
+                                var schemaUrl = control.schemaUrl;
 
-                                if (my_method_clause)
-                                {
-                                    my_method_clause = "";
+                                if (schemaUrl.substr(0, 7) != "http://" && schemaUrl.substr(0, 8) != "https://") {
+                                    schemaUrl = api_url.protocol + api_url.hostname + schemaUrl;
                                 }
 
-                                return value;
+                                control.schemaUrl = "<a href='" + schemaUrl + "' target='blank'>" + control.schemaUrl + "</a>";
                             }
-                            else {
+                        });
+                    }
 
-                                var url_host = api_url.hostname;
-                                v = url_host + "/" + value;
+                    return value;
+                }
 
-                                return value;
-                            }
-
-                        }
-                        else {
-                            return value;
-                        }
-
-                    },2) + "</pre>"
-                );
+                $('#pretty_format').html("<pre>" + JSON.stringify(response, renderer, 2) + "</pre>");
 
                 // Sets the position of the scroll to top after it loads the data into the target div
-                $("#pretty_format").scrollTop(0);
+                $(document).scrollTop(0);
             }
 
-
             // Http Method select dropdown script
-            $(".dropdown-menu").on('click', 'li a', function()
-            {
+            $(".dropdown-menu").on('click', 'li a', function() {
                 $("#method").html($(this).text() + ' <span class="caret"></span>');
                 $("#method").val($(this).data('value'));
             });
 
             // Add more field line items
-            $(".add_more").on("click", function()
-            {
+            $(".add_more").on("click", function() {
                 var active_tab = $('.nav-tabs .active').text();
-                if (active_tab == "Headers")
-                {
+                if (active_tab == "Headers") {
                     var selected_property_element = "#header_property_";
                     var selected_value_element = "#header_value_";
                     var selected_property_text = "Property:";
@@ -299,9 +267,7 @@
                     var property_col = "col-md-2";
                     var value_col = "col-md-7";
 
-                }
-                else
-                {
+                } else {
                     var selected_property_element = "#body_key_";
                     var selected_value_element = "#key_value_";
                     var selected_property_text = "Key:";
@@ -327,53 +293,43 @@
             });
 
             // Handle the click of the links
-            $("#pretty_format").on("click", ".clickable_url", function()
-            {
+            $("#pretty_format").on("click", ".clickable_url", function() {
                 var target_method = $(this).data("target-method");
-                if (!target_method)
-                {
+                if (!target_method) {
                     target_method = "GET";
                 }
+
                 var api_url = $(this).attr('href');
                 var active_tab = $('.nav-tabs .active').text();
-                if (active_tab == "Headers")
-                {
+                if (active_tab == "Headers") {
                     var selected_property_element = "#header_property_1";
                     var selected_value_element = "#header_value_1";
-                }
-                else
-                {
+
+                } else {
                     var selected_property_element = "#body_key_1";
                     var selected_value_element = "#key_value_1";
                 }
 
                 $(".vertical-center").show();
 
-                $.ajax
-                ({
+                $.ajax({
                     type: target_method,
                     url: api_url,
-                    beforeSend: function (xhr)
-                    {
+                    beforeSend: function (xhr) {
                         var header_property = $(selected_property_element).val();
                         var header_value = $(selected_value_element).val();
 
-                        if (target_method == "GET" && header_property && header_value)
-                        {
+                        if (target_method == "GET" && header_property && header_value) {
                             xhr.setRequestHeader (header_property, header_value);
                         }
                     },
-                    success: function(response, textStatus, jqXHR)
-                    {
-                        // Output the response in a stringify format in the pretty_format div
-                        output_it(response);
-
-                        // Change the method dropdown menu text to reflect the target_method
+                    success: function(response, textStatus, jqXHR) {
                         $("#url").val(api_url);
                         $(".input-group-btn #method").html(target_method + " <span class='caret'></span>");
+
+                        output_it(response);
                     },
-                    error: function(jqXHR, textStatus, errorThrown)
-                    {
+                    error: function(jqXHR, textStatus, errorThrown) {
                         $('#pretty_format').html("<pre>" + jqXHR.responseText + "</pre>");
                     }
                 });
@@ -382,41 +338,36 @@
             });
 
             // Handle Enter Key Event
-            $(document).keypress(function (e)
-            {
-                if(e.keyCode == 13)
-                {
+            $(document).keypress(function (e) {
+                if (e.keyCode == 13) {
                     $("#get_api").trigger("click");
                 }
             })
 
-            $(document).ajaxComplete(function()
-            {
+            $(document).ajaxComplete(function() {
                 $('#pretty_format').fadeIn('slow');
                 $(".vertical-center").hide();
             });
 
             // Handles positioning the loading icon to appear at the center of the target div element
-            $.fn.positionOn = function(element, align)
-            {
-                return this.each(function()
-                {
+            $.fn.positionOn = function(element, align) {
+
+                return this.each(function() {
                     var target = $(this);
                     var position = element.position();
 
                     var x = position.left;
                     var y = position.top;
 
-                    if(align == 'right')
-                    {
+                    if(align == 'right') {
                         x -= (target.outerWidth() - element.outerWidth());
-                        } else if(align == 'center') {
-                        x -= target.outerWidth() / 2 - element.outerWidth() / 2;
-                        y -= target.outerHeight() / 2 - element.outerHeight() / 2;
+
+                    } else if(align == 'center') {
+                        x -= target.outerWidth()/2 - element.outerWidth()/2;
+                        y -= target.outerHeight()/2 - element.outerHeight()/2;
                     }
 
-                    target.css(
-                    {
+                    target.css({
                         position: 'absolute',
                         zIndex: 5000,
                         top: y,
