@@ -22,6 +22,18 @@
                 from { transform: scale(1) rotate(0deg);}
                 to { transform: scale(1) rotate(360deg);}
             }
+			#container, #content {
+			    overflow: hidden;
+			    text-align: justify;
+			}
+
+			#history {
+				float:left;
+				max-width: 33%;
+				margin-right: 10px;
+				word-wrap:break-word;
+			}
+						
         </style>
 
         <title>Mason API Browser</title>
@@ -29,100 +41,114 @@
     </head>
     <body>
         <div class="container">
-
+		
+		
             <h1 class="page-header text-center">
                 Mason API Browser
             </h1>
+			
+			<div id="history">
+				<h1>History</h1>
+				<div id="history_links">
+				
+				</div>
+			</div>
+			
+			<div id="content">
 
-            <form accept-charset="UTF-8" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-8">
-                        <div class="input-group">
-                            <div class="input-group-btn">
-                                <button type="button" id="method" class="btn btn-default dropdown-toggle"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                >GET <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">GET</a></li>
-                                    <li><a href="#">POST</a></li>
-                                    <li><a href="#">PUT</a></li>
-                                    <li><a href="#">DELETE</a></li>
-                                    <li><a href="#">PATCH</a></li>
-                                </ul>
-                            </div>
-                            <input class="form-control" placeholder="Enter URL" type="text" id="url" style="margin-left: -1px">
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button" id="get_api">Send</button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+				<form accept-charset="UTF-8" class="form-horizontal" role="form">
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-8">
+							<div class="input-group">
+								<div class="input-group-btn">
+									<button type="button" id="method" class="btn btn-default dropdown-toggle"
+											data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+									>GET <span class="caret"></span></button>
+									<ul class="dropdown-menu">
+										<li><a href="#">GET</a></li>
+										<li><a href="#">POST</a></li>
+										<li><a href="#">PUT</a></li>
+										<li><a href="#">DELETE</a></li>
+										<li><a href="#">PATCH</a></li>
+									</ul>
+								</div>
+								<input class="form-control" placeholder="Enter URL" type="text" id="url" style="margin-left: -1px">
+								<span class="input-group-btn">
+									<button class="btn btn-primary" type="button" id="get_api">Send</button>
+								</span>
+							</div>
+						</div>
+					</div>
+			
+					
+					<!-- Tab Menu -->
+					<div class="form-group">
+						<div class="col-md-12">
+							<ul class="nav nav-tabs">
+								<li class="active"><a data-toggle="tab" href="#headers_content">Headers</a></li>
+								<li><a data-toggle="tab" href="#body_content">Body</a></li>
+							</ul>
+						</div>
+					</div>
 
-                <!-- Tab Menu -->
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#headers_content">Headers</a></li>
-                            <li><a data-toggle="tab" href="#body_content">Body</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="tab-content">
-                    <div id="headers_content" class="tab-pane active">
-                        <div class="form-group" id="header_menu">
-                            <div class = "col-md-12">
-                                <label for="header_property_1" class="col-sm-1 control-label">Property:</label>
-                                <div class="col-md-2">
-                                    <input class="form-control" type="text" id="header_property_1">
-                                </div>
-                                <label for="header_value_1" class="col-sm-1 control-label">Value:</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" id="header_value_1">
-                                </div>
-                                <div class="col-md-1">
-                                    <a href="#" class="add_more">+</a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Textarea field -->
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <div class="span_me" id="pretty_format" data-num="1"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="body_content" class="tab-pane fade">
-                        <div class="form-group" id="body_menu">
-                            <div class = "col-md-12">
-                                <label for="header_property_1" class="col-sm-1 control-label">Key:</label>
-                                <div class="col-md-3">
-                                    <input class="form-control" type="text" id="body_key_1">
-                                </div>
-                                <label for="header_value_1" class="col-sm-1 control-label">Value:</label>
-                                <div class="col-md-6">
-                                    <input class="form-control" type="text" id="key_value_1">
-                                </div>
-                                <div class="col-md-1">
-                                    <a href="#" class="add_more">+</a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Textarea field -->
-                        <div class="form-group">
-                            <div class="col-md-11 text-left">
-                                <div class="span_me" id="pretty_format" data-num="2"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+					<div class="tab-content">
+						<div id="headers_content" class="tab-pane active">
+							<div class="form-group" id="header_menu">
+								<div class = "col-md-12">
+									<label for="header_property_1" class="col-sm-1 control-label">Property:</label>
+									<div class="col-md-2">
+										<input class="form-control" type="text" id="header_property_1">
+									</div>
+									<label for="header_value_1" class="col-sm-1 control-label">Value:</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="header_value_1">
+									</div>
+									<div class="col-md-1">
+										<a href="#" class="add_more" id="header_add_more">+</a>
+									</div>
+								</div>
+							</div>
+							<!-- Textarea field -->
+							<div class="form-group">
+								<div class="col-sm-12">
+									<div class="span_me" id="pretty_format" data-num="1"></div>
+								</div>
+							</div>
+						</div>
+						<div id="body_content" class="tab-pane fade">
+							<div class="form-group" id="body_menu">
+								<div class = "col-md-12">
+									<label for="header_property_1" class="col-sm-1 control-label">Key:</label>
+									<div class="col-md-3">
+										<input class="form-control" type="text" id="body_key_1">
+									</div>
+									<label for="header_value_1" class="col-sm-1 control-label">Value:</label>
+									<div class="col-md-6">
+										<input class="form-control" type="text" id="key_value_1">
+									</div>
+									<div class="col-md-1">
+										<a href="#" class="add_more" id="body_add_more">+</a>
+									</div>
+								</div>
+							</div>
+							<!-- Textarea field -->
+							<div class="form-group">
+								<div class="col-md-11 text-left">
+									<div class="span_me" id="pretty_format" data-num="2"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			
+			</div>
 
             <div class="vertical-center" style="display: none">
                 <button class="btn btn-lg btn-warning">
                     <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...
                 </button>
             </div>
+			
 
         </div>
 
@@ -137,7 +163,8 @@
 
 
         <!-- Custom JavaScript-->
-        <script>
+        <script>		
+
             /**
              * Created by Kevin Cho @ phone.com on 1/13/16.
              *
@@ -158,38 +185,34 @@
                 }
 
                 var api_url = $('#url').val();
-                var header_property = $(selected_property_element).val();
-                var header_value = $(selected_value_element).val();
                 var httpmethod = $.trim($('#method').text());
-                var level = 0;
-
                 var target = $(".tab-content");
                 var dialog = $('.vertical-center');
 
                 dialog.positionOn(target, 'center');
-                dialog.show();
-
+                dialog.show();	
                 $.ajax({
                     type: httpmethod,
                     url: api_url,
                     beforeSend: function (xhr) {
-                        if (httpmethod == "GET" && header_property) {
-                            xhr.setRequestHeader (header_property, header_value);
-                        }
+						var headers = get_headers();						
+						$.each(headers , function (index, value) {
+							var header_row = JSON.parse(value);				
+							xhr.setRequestHeader (header_row.property, header_row.value);
+						});				
+						store_history(httpmethod, api_url, headers);
                     },
                     success: function(response, textStatus, jqXHR) {
-                        output_it(response);
+					    output_it(response);
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         $('#pretty_format').html("<pre>" + jqXHR.responseText + "</pre>");
                     }
                 });
-
-            });
-
+            });		
+			
             // Handles the output of the response object
             function output_it(response) {
-
                 var namespaces = response['@namespaces'];
                 var namespaceMap = {};
                 if (response['@namespaces']) {
@@ -256,29 +279,40 @@
                 $("#method").val($(this).data('value'));
             });
 
+			// header and body row settings
+			// currently only support Authorization and Prefer
+			var headerRows = 1; // starting count of header rows
+			var bodyRows = 1; // starting count of body rows
+			var next_num = 0; // starting next number of header/body rows
+			
             // Add more field line items
-            $(".add_more").on("click", function() {
+            $(".add_more").on("click", function(e, active_tab_type) {
                 var active_tab = $('.nav-tabs .active').text();
+				if (active_tab_type) {
+					// click triggered by code
+					active_tab = active_tab_type;
+				}
                 if (active_tab == "Headers") {
-                    var selected_property_element = "#header_property_";
-                    var selected_value_element = "#header_value_";
+                    var selected_property_element = "header_property_";
+                    var selected_value_element = "header_value_";
                     var selected_property_text = "Property:";
                     var selected_element = "#header_menu";
                     var property_col = "col-md-2";
                     var value_col = "col-md-7";
+					
+					next_num = ++headerRows;
 
                 } else {
-                    var selected_property_element = "#body_key_";
-                    var selected_value_element = "#key_value_";
+                    var selected_property_element = "body_key_";
+                    var selected_value_element = "key_value_";
                     var selected_property_text = "Key:";
                     var selected_element = "#body_menu";
                     var property_col = "col-md-3";
                     var value_col = "col-md-6";
+					
+					next_num = ++bodyRows;
                 }
 
-                var last_input = $('.form-control:last').attr('id');
-                var last_num = last_input.substr(last_input.length - 1);
-                var next_num = parseInt(last_num) + 1;
                 var div_input = $("<div class='form-group'>\
                         <label class='col-sm-1 control-label' for='" + selected_property_element + next_num + "'>" +
                             selected_property_text + "</label>\
@@ -288,8 +322,8 @@
                         <label class='col-sm-1 control-label' for='" + selected_value_element + next_num+"'>Value:</label>\
                         <div class='" + value_col + "'>\
                             <input class='form-control' type='text' id='" + selected_value_element + next_num+"'>\
-                        </div>");
-                $(selected_element).after(div_input);
+                        </div>"); 
+                $(selected_element).after($(div_input));
             });
 
             // Handle the click of the links
@@ -316,27 +350,25 @@
                     type: target_method,
                     url: api_url,
                     beforeSend: function (xhr) {
-                        var header_property = $(selected_property_element).val();
-                        var header_value = $(selected_value_element).val();
-
-                        if (target_method == "GET" && header_property && header_value) {
-                            xhr.setRequestHeader (header_property, header_value);
-                        }
+						var headers = get_headers();
+						$.each(headers , function (index, value) {
+							var header_row = JSON.parse(value);
+							xhr.setRequestHeader (header_row.property, header_row.value);
+						});
+						store_history(target_method, api_url, headers);
                     },
                     success: function(response, textStatus, jqXHR) {
                         $("#url").val(api_url);
-                        $(".input-group-btn #method").html(target_method + " <span class='caret'></span>");
-
-                        output_it(response);
+                        $(".input-group-btn #method").html(target_method + " <span class='caret'></span>");               
+						output_it(response);					
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        $('#pretty_format').html("<pre>" + jqXHR.responseText + "</pre>");
+                        $('#pretty_format').html("<pre>" + jqXHR.responseText + "</pre>"); 
                     }
                 });
 
                 return false;
             });
-
             // Handle Enter Key Event
             $(document).keypress(function (e) {
                 if (e.keyCode == 13) {
@@ -375,8 +407,145 @@
                     });
                 });
             };
+						
+			/**
+             * All functions below
+			 * created by Robert Gavina starting on 03/03/16.
+             */
+			// get header properties and values
+			function get_headers() {
+				var headers = [];
+				$('[id^=header_property_]').each(function () {
+					header_property_value = $(this).val();
+					if (header_property_value) {
+						var idnum = $(this).attr('id').match(/[\d]/);
+						var header_row = new Object;
+						header_row.property = header_property_value;
+						header_row.value = $('#header_value_' + idnum).val();
+						headers.push(JSON.stringify(header_row));
+					}
+				});
+				return headers;
+			}			
+			 
+			populate_history_section();
+			 
+			// check if browser supports local storage 
+			function local_storage_supported() {
+				if (typeof(Storage) !== "undefined") {
+					return true;
+				} else {
+					return false;
+				}
+			} 
+			 
+			// max number of history entries 
+			var history_max_length = 10;
+			
+			// store latest request into history
+			function store_history(type, url, headers) {
+				if (!local_storage_supported()) {
+					return;
+				}
 
+				var history = [];
+				if (localStorage.getItem("history") !== null) {
+					// history exists, retrieve it
+					history = JSON.parse(localStorage.getItem("history"));
+				} 
+
+				// object to store all request parameters
+				var request = new Object();
+				request.type = type;
+				request.url = url;
+				request.headers = headers;
+				history.unshift(JSON.stringify(request));
+				
+				if (history.length > history_max_length) {
+					// too many items in history, remove from end of array until at max value
+					history.splice(history_max_length, history.length - history_max_length);
+				}
+				
+				// save updated data into local storage
+				localStorage.setItem("history", JSON.stringify(history));
+				
+				populate_history_section();
+			}
+			
+			// update History section
+			function populate_history_section() {
+				if (!local_storage_supported()) {
+					return;
+				}
+				var html = '';
+				var history = JSON.parse(localStorage.getItem("history"));
+				if (history) {
+					$.each(history , function (index, value) {
+						var temp_data = JSON.parse(value);
+						// create historical links
+						html += temp_data.type + ' <a href="' + index + '">' + temp_data.url + '</a><br />'; 
+					});
+				}
+				$('#history_links').html(html);
+			}
+			
+			// click handler for history links
+			$('#history_links').on('click', 'a', function(e) {
+				e.preventDefault(); // prevent going to link href
+				// get index of clicked historical link
+				var history_index = $(this).attr('href');
+				if (localStorage.getItem("history") !== null) {
+					// history exists, retrieve it
+					var history = JSON.parse(localStorage.getItem("history"));
+					// get request object by index of clicked link
+					var requestObj = JSON.parse(history[history_index]);
+					var target_method = requestObj.type;
+					if (!target_method) {
+						target_method = "GET";
+					}
+					var api_url = requestObj.url; 
+
+					$(".vertical-center").show();
+					$(".form-control").val(''); // clear out all inputs with class form-control
+					$.ajax({
+						type: target_method,
+						url: api_url,
+						beforeSend: function (xhr) {
+							// set request headers
+							$.each(requestObj.headers, function (index, value) {
+								var header_row = JSON.parse(value);
+								xhr.setRequestHeader (header_row.property, header_row.value);
+								// add more header rows if not present in UI
+								if (!$("#header_property_" + (index + 1)).length) {
+									$( "#header_add_more").trigger("click", "Headers");
+								}
+							});
+							
+							// set UI header inputs
+							$("input[id^=header_property]").each(function(index){
+								if (typeof requestObj.headers[index]!= 'undefined') {
+								    var idnum = $(this).attr('id').match(/[\d]/);
+								    var header_row = JSON.parse(requestObj.headers[index]);
+									$(this).val(header_row.property);
+									$("#header_value_" + idnum).val(header_row.value);
+								}
+							});
+							
+							store_history(target_method, api_url, requestObj.headers);
+						},
+						success: function(response, textStatus, jqXHR) {
+							$("#url").val(api_url);
+							$(".input-group-btn #method").html(target_method + " <span class='caret'></span>");               
+							output_it(response);					
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							$('#pretty_format').html("<pre>" + jqXHR.responseText + "</pre>"); 
+						}
+					});
+
+					return false;
+				} 
+			});
         </script>
-
     </body>
 </html>
